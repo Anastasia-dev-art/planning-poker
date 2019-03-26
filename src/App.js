@@ -18,6 +18,27 @@ const unvoted = story => story.votes.length < players;
 
 const players = 3;
 
+const handleResponse = (response) => {
+  return response.ok
+    ? response.json().then((data) => JSON.stringify(data, null, 2))
+    : Promise.reject(new Error('Unexpected response'));
+};
+
+let userId = "maksim";
+
+fetch('https://planning-poker-server.glitch.me/login', { method: 'POST' })
+      .then(handleResponse)
+      .then((response) => userId = response.id)
+      .catch((err) => console.log(err.message));
+
+const ws = new WebSocket(`wss://planning-poker-server.glitch.me`);
+ws.onerror = () => console.log("WebSocket error");
+ws.onopen = () => {
+  ws.send({text: 'Test', userId})
+  console.log("WebSocket connection established")
+};
+ws.onclose = () => console.log("WebSocket connection closed");
+
 const storiesReducer = (state, action) => {
   switch (action.type) {
     case RESET:
@@ -27,7 +48,7 @@ const storiesReducer = (state, action) => {
     case ADD_STORY:
       return {
         ...state,
-        stories: [...state.stories, { text: action.payload, votes: []}]
+        stories: [...state.stories, { text: action.payload, votes: [] }]
       };
     case VOTE:
       const stories = state.stories.map(story =>
@@ -67,8 +88,8 @@ const App = () => {
   };
 
   const startOver = () => {
-    dispatch({ type: RESET })
-  }
+    dispatch({ type: RESET });
+  };
 
   return (
     <>
