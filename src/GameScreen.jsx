@@ -7,16 +7,17 @@ const sizes = {
   L: "l"
 };
 
-export const GameScreen = ({ onClick, stories, currentStory, vote }) => (
+export const GameScreen = ({ stories, currentStory, vote }) => (
   <>
     <h1>Game screen</h1>
-    <div>Current story: {currentStory.text}</div>
+    {
+        currentStory && <div>Current story: {currentStory.text}</div>
+    }
     <>
       {Object.values(sizes).map(size => (
-        <button key={size} onClick={() => vote(size)}>{size}</button>
+        <button key={size} onClick={() => vote(size, currentStory.text)}>{size}</button>
       ))}
     </>
     <StoriesList stories={stories} />
-    <button onClick={onClick}>Switch state</button>
   </>
 );

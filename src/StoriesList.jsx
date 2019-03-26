@@ -4,7 +4,7 @@ export const StoriesList = ({ stories }) => {
   return (
     <ul>
       {stories.map((story, index) => (
-        <li key={index}>{story.text}</li>
+        <li key={index}>{story.text} {story.size}</li>
       ))}
     </ul>
   );
