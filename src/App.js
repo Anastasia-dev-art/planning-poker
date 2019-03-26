@@ -14,7 +14,9 @@ const RESET = "RESET";
 const ADD_STORY = "ADD_STORY";
 const VOTE = "VOTE";
 
-const unvoted = story => !story.size;
+const unvoted = story => story.votes.length < players;
+
+const players = 3;
 
 const storiesReducer = (state, action) => {
   switch (action.type) {
@@ -25,12 +27,12 @@ const storiesReducer = (state, action) => {
     case ADD_STORY:
       return {
         ...state,
-        stories: [...state.stories, { text: action.payload }]
+        stories: [...state.stories, { text: action.payload, votes: []}]
       };
     case VOTE:
       const stories = state.stories.map(story =>
         story.text === action.payload.text
-          ? { ...story, size: action.payload.size }
+          ? { ...story, votes: [...story.votes, action.payload.size] }
           : story
       );
       return {
