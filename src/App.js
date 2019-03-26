@@ -1,4 +1,4 @@
-import React, { useReducer } from "react";
+import React, { useReducer, useEffect } from "react";
 import "./App.css";
 import { NewGameScreen } from "./NewGameScreen";
 import { GameScreen } from "./GameScreen";
@@ -10,6 +10,7 @@ const RESULTS = "RESULTS";
 
 const START_GAME = "START_GAME";
 const RESET = "RESET";
+const SET_STATE = "SET_STATE";
 
 const ADD_STORY = "ADD_STORY";
 const VOTE = "VOTE";
@@ -18,24 +19,10 @@ const unvoted = story => story.votes.length < players;
 
 const players = 3;
 
-const handleResponse = (response) => {
-  return response.ok
-    ? response.json().then((data) => JSON.stringify(data, null, 2))
-    : Promise.reject(new Error('Unexpected response'));
-};
-
-let userId = "maksim";
-
-fetch('https://planning-poker-server.glitch.me/login', { method: 'POST' })
-      .then(handleResponse)
-      .then((response) => userId = response.id)
-      .catch((err) => console.log(err.message));
-
 const ws = new WebSocket(`wss://planning-poker-server.glitch.me`);
 ws.onerror = () => console.log("WebSocket error");
 ws.onopen = () => {
-  ws.send({text: 'Test', userId})
-  console.log("WebSocket connection established")
+  console.log("WebSocket connection established");
 };
 ws.onclose = () => console.log("WebSocket connection closed");
 
@@ -45,6 +32,8 @@ const storiesReducer = (state, action) => {
       return { stories: [], screen: NEW_GAME };
     case START_GAME:
       return { ...state, screen: GAME };
+    case SET_STATE:
+      return { ...action.payload };
     case ADD_STORY:
       return {
         ...state,
@@ -80,9 +69,6 @@ const App = () => {
     dispatch({ type: ADD_STORY, payload: text });
   };
 
-  const { stories, screen } = state;
-  const currentStory = stories.filter(unvoted)[0];
-
   const vote = (size, text) => {
     dispatch({ type: VOTE, payload: { size, text } });
   };
@@ -90,6 +76,23 @@ const App = () => {
   const startOver = () => {
     dispatch({ type: RESET });
   };
+
+  useEffect(() => {
+    ws.onmessage = (message) => {
+      console.log('+++', message)
+      dispatch({ type: SET_STATE, payload: JSON.parse(message.data) });
+    }
+  },[])
+
+  useEffect(() => {
+    console.log('---',state)
+    try {
+      ws.send(JSON.stringify(state))
+    } catch (e) {}
+  }, [state.stories.length, state.screen]);
+
+  const { stories, screen } = state;
+  const currentStory = stories.filter(unvoted)[0];
 
   return (
     <>
