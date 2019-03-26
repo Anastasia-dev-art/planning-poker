@@ -1,4 +1,5 @@
 import React, { useCallback, useState } from "react";
+import {StoriesList} from './StoriesList'
 
 export const NewGameScreen = ({ stories, onClick, startGame }) => {
   const [storyText, setStoryText] = useState("");
@@ -18,11 +19,7 @@ export const NewGameScreen = ({ stories, onClick, startGame }) => {
         onChange={e => setStoryText(e.target.value)}
       />
       <button onClick={handleClick}>Add story</button>
-      <ul>
-        {stories.map((story, index) => (
-          <li key={index}>{story.text}</li>
-        ))}
-      </ul>
+      <StoriesList stories={stories}/>
       <button onClick={startGame}>Start game</button>
     </>
   );
