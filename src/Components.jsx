@@ -1,9 +1,17 @@
 import styled from 'styled-components'
 
+export const FlexContainer = styled.div`
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  height: 100%;
+`;
+
 export const Panel = styled.div`
   padding: 20px 20px 40px 20px;
   box-shadow: rgba(0, 0, 0, 0.7) 0px 10px 20px 0px;
   text-align: center;
+  min-width: 300px;
 `;
 
 export const InputGroup = styled.div`
