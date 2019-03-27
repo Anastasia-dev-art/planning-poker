@@ -1,7 +1,7 @@
 import React from "react";
-import styled from 'styled-components'
+import styled from "styled-components";
 import { StoriesList } from "./StoriesList";
-import {Panel, Button} from "./Components"
+import { Panel, Button } from "./Components";
 
 const sizes = {
   S: "s",
@@ -10,24 +10,24 @@ const sizes = {
 };
 
 const VoteButton = styled(Button)`
-    margin: 0 10px;
-`
+  margin: 0 10px;
+`;
 
 const CurrentStory = styled.div`
-    margin-bottom: 20px;
-`
+  margin-bottom: 20px;
+`;
 
 export const GameScreen = ({ stories, currentStory, vote }) => (
   <Panel>
     <h1>Game screen</h1>
     <CurrentStory>
-    {
-        currentStory && <div><strong>Current story:</strong> {currentStory.text}</div>
-    }
+      {currentStory && <div>Current story: {currentStory.text}</div>}
     </CurrentStory>
     <>
       {Object.values(sizes).map(size => (
-        <VoteButton key={size} onClick={() => vote(size, currentStory.text)}>{size}</VoteButton>
+        <VoteButton key={size} onClick={() => vote(size, currentStory.text)}>
+          {size}
+        </VoteButton>
       ))}
     </>
     <StoriesList stories={stories} />
