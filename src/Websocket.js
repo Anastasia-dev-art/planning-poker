@@ -14,3 +14,10 @@ export const send = message => {
 export const onMessage = cb => {
   ws.onmessage = cb;
 };
+
+export const onConnect = cb => {
+  ws.onopen = () => {
+    console.log("WebSocket connection established");
+    cb();
+  };
+};

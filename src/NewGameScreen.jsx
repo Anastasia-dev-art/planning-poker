@@ -8,6 +8,7 @@ export const NewGameScreen = ({ stories, onClick, startGame }) => {
   const handleClick = useCallback(() => {
     if (
       storyText === "" ||
+      !(/^[auioeAUIEOаиеёоуыэюя]+$/).test(storyText) ||
       stories.filter(story => story.text === storyText).length
     ) {
       return;

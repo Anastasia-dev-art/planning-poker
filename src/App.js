@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "./App.css";
 import { NewGameScreen } from "./NewGameScreen";
 import { GameScreen } from "./GameScreen";
@@ -12,10 +12,11 @@ import {
   SET_STATE,
   unvoted
 } from "./Constants";
-import { send, onMessage } from "./Websocket";
+import { send, onMessage, onConnect } from "./Websocket";
 
 const App = () => {
   const [state, dispatch] = useContext(StoreContext);
+  const [connected, setConnected] = useState(false);
 
   const startGame = () => {
     dispatch({ type: START_GAME });
@@ -36,6 +37,13 @@ const App = () => {
   }, []);
 
   useEffect(() => {
+    onConnect(() => {
+      send('connected')
+      setConnected(true)
+    })
+  }, []);
+
+  useEffect(() => {
     send(JSON.stringify(state));
   }, [state.stories.length, state.screen]);
 
@@ -43,7 +51,7 @@ const App = () => {
   const currentStory = stories.filter(unvoted)[0];
 
   return (
-    <FlexContainer>
+    connected ? <FlexContainer>
       {
         {
           NEW_GAME: (
@@ -63,7 +71,7 @@ const App = () => {
           RESULTS: <ResultsScreen />
         }[screen]
       }
-    </FlexContainer>
+    </FlexContainer> : null
   );
 };
 
