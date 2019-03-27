@@ -1,26 +1,35 @@
 import React, { useCallback, useState } from "react";
-import {StoriesList} from './StoriesList'
+import { StoriesList } from "./StoriesList";
+import { Panel, InputGroup, StoryInput, Button } from "./Components";
 
 export const NewGameScreen = ({ stories, onClick, startGame }) => {
   const [storyText, setStoryText] = useState("");
 
   const handleClick = useCallback(() => {
+    if (
+      storyText === "" ||
+      stories.filter(story => story.text === storyText).length
+    ) {
+      return;
+    }
     onClick(storyText);
-    setStoryText('')
+    setStoryText("");
   }, [storyText]);
 
   return (
-    <>
-      <h1>New Game</h1>
-      <input
-        type="text"
-        placeholder="Story"
-        value={storyText}
-        onChange={e => setStoryText(e.target.value)}
-      />
-      <button onClick={handleClick}>Add story</button>
-      <StoriesList stories={stories}/>
-      <button onClick={startGame}>Start game</button>
-    </>
+    <Panel>
+      <h1>Create Stories</h1>
+      <InputGroup>
+        <StoryInput
+          type="text"
+          placeholder="Story"
+          value={storyText}
+          onChange={e => setStoryText(e.target.value)}
+        />
+        <button onClick={handleClick}>Add story</button>
+      </InputGroup>
+      <StoriesList stories={stories} />
+      <Button onClick={startGame}>Start game</Button>
+    </Panel>
   );
 };

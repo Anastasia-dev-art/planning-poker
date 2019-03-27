@@ -1,11 +1,25 @@
 import React from "react";
+import styled from "styled-components";
 
-export const StoriesList = ({ stories }) => {
+const Story = styled.li`
+  background-color: #2a2e35;
+  padding: 10px;
+  margin-bottom: 10px;
+`;
+
+const Stories = styled.ul`
+  list-style: none;
+  padding: 0;
+`;
+
+export const StoriesList = ({ stories, showVotes }) => {
   return (
-    <ul>
+    <Stories>
       {stories.map((story, index) => (
-        <li key={index}>{story.text} {story.votes.join(', ')}</li>
+        <Story key={index}>
+          {story.text} {showVotes && story.votes.join(", ")}
+        </Story>
       ))}
-    </ul>
+    </Stories>
   );
 };

@@ -3,6 +3,14 @@ import "./App.css";
 import { NewGameScreen } from "./NewGameScreen";
 import { GameScreen } from "./GameScreen";
 import { ResultsScreen } from "./ResultsScreen";
+import styled from 'styled-components'
+
+const FlexContainer = styled.div`
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  height: 100%;
+`
 
 const NEW_GAME = "NEW_GAME";
 const GAME = "GAME";
@@ -95,7 +103,7 @@ const App = () => {
   const currentStory = stories.filter(unvoted)[0];
 
   return (
-    <>
+    <FlexContainer>
       {
         {
           NEW_GAME: (
@@ -115,7 +123,7 @@ const App = () => {
           RESULTS: <ResultsScreen stories={stories} startOver={startOver} />
         }[screen]
       }
-    </>
+    </FlexContainer>
   );
 };
 
